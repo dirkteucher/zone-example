@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title>Zoners Desk Finder</title>
+  </head>
+  <body>
+    <iframe id="pcWindow" src="./playcanvas/index.html"></iframe>
+
+
+    <button onclick="moveCamera()">
+        Move camera
+    </button>
+    <script>
+    
+        function moveCamera(){
+
+            //camera position lerp and slerp
+            var iframe = window.document.getElementById("pcWindow");
+
+            var pc = iframe.contentWindow.pc;
+            var originalCamera = pc.app.root.findByName("Camera2");
+
+
+            var positionX = -0.532;
+            var positionY = 0.653;
+            var positionZ = 0.611;
+
+            var time = 0.3;
+            var howLongToRotate=0;
+            function step() {
+                if (howLongToRotate < 50) {
+
+
+                var cameraRotation =  pc.app.root.findByName("Camera2").getRotation();
+                var cameraPosition = pc.app.root.findByName("Camera2").getPosition();
+
+                var test = pc.app.root.findByName('Camera').getRotation();
+                var testPos = pc.app.root.findByName('Camera').getPosition();
+
+                var angle = cameraRotation;
+                var position = cameraPosition;
+
+                // Use slerp to smoothly interpolate between two angles
+                // http://developer.playcanvas.com/en/api/pc.Quat.html#slerp
+                cameraRotation.slerp(cameraRotation, test, 0.1);
+                // Use lerp to smoothly interpolate between two positions
+                // http://developer.playcanvas.com/en/api/pc.Vec3.html#lerp
+                cameraPosition.lerp(cameraPosition, testPos, 0.1);
+
+                originalCamera.setRotation(angle);
+                originalCamera.setPosition(position);
+
+                window.requestAnimationFrame(step);
+
+                howLongToRotate=howLongToRotate+0.5
+                }
+            }
+            window.requestAnimationFrame(step);
+        }
+
+    </script>
+
+  </body>
+</html>
